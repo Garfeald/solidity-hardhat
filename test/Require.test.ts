@@ -13,10 +13,10 @@ describe('Require', function () {
     }
 
     /**
-     * @description метод отправки монет с кошелькп на кошелёк
+     * @description метод отправки монет с кошелька на кошелёк
      * @param sender от имени плательщика
      * @param _to адрес кошелька
-     * @returns void
+     * @returns возвращает инфо о транзакции и количество отправленных средств
      */
     async function sendMoney(sender: Signer, _to: string): Promise<[tx: TransactionResponse, amount: number]> {
         const amount = 100
