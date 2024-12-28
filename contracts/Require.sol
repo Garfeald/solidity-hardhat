@@ -18,8 +18,12 @@ contract Require {
         emit Paid(msg.sender, msg.value, block.timestamp);
     }
 
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+
     modifier onlyOwner(address _to) {
-        require(msg.sender == owner, "ypu are not an owner");
+        require(msg.sender == owner, "you are not an owner");
         require(_to != address(0), "incorrect address");
         _;
     }
