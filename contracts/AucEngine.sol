@@ -9,7 +9,7 @@ contract AucEngine {
         address payable seller;
         uint startingPrice;
         uint finalPrice;
-        uint startsAt;
+        uint startAt;
         uint endsAt;
         uint discountRate;
         string item;
@@ -17,6 +17,13 @@ contract AucEngine {
     }
 
     Auction[] public auctions;
+
+    event AuctionCreated(
+        uint index,
+        string itemName,
+        uint startPrice,
+        uint duration
+    );
 
     constructor() {
         owner = msg.sender;
@@ -30,8 +37,29 @@ contract AucEngine {
     ) external {
         uint duration = _duration == 0 ? DURATION : _duration;
 
-		require(_startingPrice >= _discountRate * duration, "incorrect starting price");
+        require(
+            _startingPrice >= _discountRate * duration,
+            "incorrect starting price"
+        );
 
-		Auction memory newAuction({});
-    };
+        Auction memory newAuction = Auction({
+            seller: payable(msg.sender),
+            startingPrice: _startingPrice,
+            discountRate: _discountRate,
+            finalPrice: _startingPrice,
+            startAt: block.timestamp,
+            endsAt: block.timestamp + duration,
+            item: _item,
+            stoped: false
+        });
+
+        auctions.push(newAuction);
+
+        emit AuctionCreated(
+            auctions.length - 1,
+            _item,
+            _startingPrice,
+            duration
+        );
+    }
 }
