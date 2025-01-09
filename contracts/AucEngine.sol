@@ -13,7 +13,7 @@ contract AucEngine {
         uint endsAt;
         uint discountRate;
         string item;
-        bool stoped;
+        bool stopped;
     }
 
     Auction[] public auctions;
@@ -24,6 +24,8 @@ contract AucEngine {
         uint startPrice,
         uint duration
     );
+
+    event AuctionEnded(uint index, uint finalPrice, address winner);
 
     constructor() {
         owner = msg.sender;
@@ -50,7 +52,7 @@ contract AucEngine {
             startAt: block.timestamp,
             endsAt: block.timestamp + duration,
             item: _item,
-            stoped: false
+            stopped: false
         });
 
         auctions.push(newAuction);
@@ -61,5 +63,29 @@ contract AucEngine {
             _startingPrice,
             duration
         );
+    }
+
+    function getPriceFor(uint index) public view returns (uint) {
+        Auction memory cAuction = auctions[index];
+        require(!cAuction.stopped, "Stopped!");
+        uint elapsed = block.timestamp - cAuction.startAt;
+        uint discount = cAuction.discountRate * elapsed;
+        return cAuction.startingPrice - discount;
+    }
+
+    function buy(uint index) external payable {
+        Auction memory cAuction = auctions[index];
+        require(!cAuction.stopped, "Stopped!");
+        require(block.timestamp < cAuction.endsAt, "Ended!");
+        uint cPrice = getPriceFor(index);
+        require(msg.value < cPrice, "Not enough funds!");
+        cAuction.stopped = true;
+        cAuction.finalPrice = cPrice;
+        uint refund = msg.value - cPrice;
+        if (refund > 0) {
+            payable(msg.sender).transfer(refund);
+        }
+        cAuction.seller.transfer(cPrice - ((cPrice * FEE) / 100));
+        emit AuctionEnded(index, cPrice, msg.sender);
     }
 }
