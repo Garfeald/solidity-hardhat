@@ -73,8 +73,14 @@ contract AucEngine {
         return cAuction.startingPrice - discount;
     }
 
+    function stop(uint index) public {
+        Auction storage cAuction = auctions[index];
+        cAuction.stopped = true;
+    }
+
     function buy(uint index) external payable {
-        Auction memory cAuction = auctions[index];
+        // важно не memory а storage, чтобы был доступ к результату
+        Auction storage cAuction = auctions[index];
         require(!cAuction.stopped, "Stopped!");
         require(block.timestamp < cAuction.endsAt, "Ended!");
         uint cPrice = getPriceFor(index);
