@@ -84,7 +84,7 @@ contract AucEngine {
         require(!cAuction.stopped, "Stopped!");
         require(block.timestamp < cAuction.endsAt, "Ended!");
         uint cPrice = getPriceFor(index);
-        require(msg.value < cPrice, "Not enough funds!");
+        require(msg.value >= cPrice, "Not enough funds!");
         cAuction.stopped = true;
         cAuction.finalPrice = cPrice;
         uint refund = msg.value - cPrice;
