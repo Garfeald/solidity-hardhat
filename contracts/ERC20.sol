@@ -84,7 +84,7 @@ abstract contract ERC20 is IERC20, IERC20Metadata, IERC20Errors {
      * - the caller must have a balance of at least `value`.
      */
     function transfer(address to, uint256 value) public virtual returns (bool) {
-        address owner = _msgSender();
+        address owner = msg.sender;
         _transfer(owner, to, value);
         return true;
     }
@@ -139,7 +139,7 @@ abstract contract ERC20 is IERC20, IERC20Metadata, IERC20Errors {
         address to,
         uint256 value
     ) public virtual returns (bool) {
-        address spender = _msgSender();
+        address spender = msg.sender;
         _spendAllowance(from, spender, value);
         _transfer(from, to, value);
         return true;
@@ -265,7 +265,7 @@ abstract contract ERC20 is IERC20, IERC20Metadata, IERC20Errors {
      * function _approve(address owner, address spender, uint256 value, bool) internal virtual override {
      *     super._approve(owner, spender, value, true);
      * }
-     * ```
+    //  * ```
      *
      * Requirements are the same as {_approve}.
      */
