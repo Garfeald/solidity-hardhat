@@ -113,7 +113,7 @@ abstract contract ERC20 is IERC20, IERC20Metadata, IERC20Errors {
         address spender,
         uint256 value
     ) public virtual returns (bool) {
-        address owner = _msgSender();
+        address owner = msg.sender;
         _approve(owner, spender, value);
         return true;
     }
