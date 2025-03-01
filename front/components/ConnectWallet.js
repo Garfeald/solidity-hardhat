@@ -1,4 +1,5 @@
 import { NetworkErrorMessage } from "./NetworkErrorMessage"
+
 export function ConnectWallet({ connectWallet, networkError, dismiss }) {
     return (
         <>
@@ -10,6 +11,7 @@ export function ConnectWallet({ connectWallet, networkError, dismiss }) {
                     />
                 )}
             </div>
+
             <p>Please connect your account...</p>
             <button type="button" onClick={connectWallet}>
                 Connect Wallet
